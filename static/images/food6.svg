@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480" viewBox="0 0 800 480">
+  <defs>
+    <linearGradient id="g6" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fff7e6"/>
+      <stop offset="1" stop-color="#ffe8b2"/>
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#g6)" rx="24"/>
+  <g transform="translate(60,60) scale(0.9)">
+    <text x="0" y="120" font-size="110" font-family="Segoe UI, Arial" fill="#6b3b00">☕</text>
+    <text x="180" y="140" font-size="40" font-family="Inter, Arial" fill="#4a2b00">Cafe sữa</text>
+  </g>
+</svg>

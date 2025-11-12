@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Chi tiết sinh viên</h5>
+            </div>
+            <div class="card-body">
+                {% if student %}
+                <h4>{{ student.ho_ten }}</h4>
+                <p><strong>Mã SV:</strong> {{ student.ma_sv }}</p>
+                <p><strong>Ngành:</strong> {{ student.nganh_hoc }}</p>
+                <p><strong>Email:</strong> {{ student.email }}</p>
+                <p><strong>SĐT:</strong> {{ student.sdt }}</p>
+                {% else %}
+                <p class="text-muted">Không tìm thấy thông tin chi tiết sinh viên.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Đơn hàng của sinh viên</h5>
+            </div>
+            <div class="card-body">
+                {% if orders %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Mã đơn</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                                <th>Thời gian</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <td>#{{ order.id }}</td>
+                                <td>{{ "{:,.0f}".format(order.total_amount) }}₫</td>
+                                <td>{{ order.status }}</td>
+                                <td>{{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                                <td>
+                                    <a href="{{ url_for('admin_order_detail', order_id=order.id) }}" class="btn btn-sm btn-outline-primary">Chi tiết</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">Chưa có đơn hàng.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">Tài khoản</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Vai trò:</strong> {{ user.role }}</p>
+                <p><strong>Tạo lúc:</strong> {{ user.created_at.strftime('%d/%m/%Y') }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

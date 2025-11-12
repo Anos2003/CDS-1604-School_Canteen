@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section shadow-lg py-5 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-7 text-white">
+                <h1 class="display-4 fw-bold">Smart Canteen</h1>
+                <p class="lead">Đặt đồ ăn nhanh, tiện lợi và tiết kiệm cho sinh viên.</p>
+                <p class="mb-4">Khám phá thực đơn phong phú, nhận gợi ý từ chatbot và theo dõi đơn hàng của bạn.</p>
+                <div class="d-flex gap-2">
+                    <a href="{{ url_for('menu') }}" class="btn btn-accent btn-lg">Xem Thực Đơn</a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg">Đăng Nhập</a>
+                </div>
+            </div>
+            <div class="col-md-5 d-none d-md-block">
+                <img src="{{ url_for('static', filename='images/food1.svg') }}" class="img-fluid rounded" alt="hero">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features -->
+<div class="container mb-5">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card stats-card text-center p-4 reveal">
+                <i class="fas fa-bolt fa-2x mb-3 text-primary"></i>
+                <h5 class="fw-bold">Nhanh & Tiện</h5>
+                <p class="small text-muted">Đặt chỉ trong vài cú click.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stats-card text-center p-4 reveal">
+                <i class="fas fa-utensils fa-2x mb-3 text-primary"></i>
+                <h5 class="fw-bold">Thực đơn đa dạng</h5>
+                <p class="small text-muted">Món ăn phong phú cho mọi bữa.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stats-card text-center p-4 reveal">
+                <i class="fas fa-robot fa-2x mb-3 text-primary"></i>
+                <h5 class="fw-bold">Gợi ý thông minh</h5>
+                <p class="small text-muted">Chatbot gợi ý món phù hợp theo khẩu vị.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

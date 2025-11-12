@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="row align-items-center mb-5">
+    <div class="col-md-8">
+        <h1 class="display-5 fw-bold text-dark mb-2">
+            <i class="fas fa-utensils me-3" style="background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+            Thực Đơn Hôm Nay
+        </h1>
+        <p class="text-muted lead">Chọn món ăn yêu thích và thêm vào giỏ hàng</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('cart') }}" class="btn btn-primary btn-lg position-relative">
+            <i class="fas fa-shopping-cart me-2"></i>Giỏ Hàng
+            {% if cart_quantity and cart_quantity > 0 %}
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                {{ cart_quantity }}
+            </span>
+            {% endif %}
+        </a>
+    </div>
+</div>
+
+<!-- Menu Items -->
+<div class="row g-4">
+    {% for item in menu_items %}
+    <div class="col-xl-4 col-lg-6 col-md-6">
+        <div class="card menu-item h-100 position-relative">
+            <div class="card-image-wrap">
+                <div class="menu-icon d-flex align-items-center justify-content-center">
+                    <div class="emoji">{{ item.icon_emoji }}</div>
+                </div>
+                <span class="availability-badge">
+                    {% if item.is_available %}
+                    <span class="badge bg-success"><i class="fas fa-check me-1"></i>Có sẵn</span>
+                    {% else %}
+                    <span class="badge bg-danger"><i class="fas fa-times me-1"></i>Hết hàng</span>
+                    {% endif %}
+                </span>
+                <span class="price-tag"><span class="price-tag-inner">{{ "{:,.0f}".format(item.gia) }}₫</span></span>
+            </div>
+            <div class="card-body p-3">
+                <h5 class="card-title fw-bold text-dark mb-2">{{ item.ten_mon }}</h5>
+                <p class="small text-muted mb-2">{{ item.loai }}</p>
+                <p class="text-muted small mb-3">{{ item.description }}</p>
+
+                <form method="POST" action="{{ url_for('add_to_cart') }}">
+                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary" {% if not item.is_available %}disabled{% endif %}>
+                            <i class="fas fa-cart-plus me-2"></i>
+                            {% if item.is_available %}
+                            Thêm Vào Giỏ
+                            {% else %}
+                            Hết Hàng
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Empty State -->
+{% if not menu_items %}
+<div class="text-center py-5">
+    <div class="mb-4">
+        <i class="fas fa-utensils fa-4x text-muted mb-3"></i>
+    </div>
+    <h4 class="text-muted">Chưa có món ăn nào trong thực đơn</h4>
+    <p class="text-muted">Vui lòng quay lại sau!</p>
+</div>
+{% endif %}
+
+<!-- Floating Cart Button -->
+{% if session.get('cart') %}
+<a href="{{ url_for('cart') }}" class="floating-btn btn btn-primary">
+    <i class="fas fa-shopping-cart"></i>
+</a>
+{% endif %}
+{% endblock %}

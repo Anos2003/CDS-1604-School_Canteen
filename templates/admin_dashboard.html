@@ -1,0 +1,445 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Header -->
+<div class="dashboard-header">
+    <div class="header-content">
+        <h1 class="display-5 fw-bold text-dark mb-2">
+            <i class="fas fa-tachometer-alt me-3 dashboard-icon"></i>
+            Dashboard Quản Trị
+        </h1>
+        <p class="text-muted lead">Tổng quan hệ thống Smart Canteen</p>
+    </div>
+    <div class="header-status">
+        <div class="status-indicator">
+            <span class="status-dot online"></span>
+            <small class="text-muted">Hệ thống đang hoạt động</small>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row g-4 mb-5">
+    <div class="col-xl-3 col-md-6">
+        <div class="stats-card card-orders">
+            <div class="card-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <div class="card-content">
+                <h3 class="text-primary">{{ total_orders }}</h3>
+                <p class="fw-semibold mb-0">Tổng Đơn Hàng</p>
+                <div class="card-trend">
+                    <i class="fas fa-arrow-up text-success"></i>
+                    <span class="text-success">12%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stats-card card-pending">
+            <div class="card-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="card-content">
+                <h3 class="text-warning">{{ pending_orders }}</h3>
+                <p class="fw-semibold mb-0">Đơn Chờ Xử Lý</p>
+                <div class="card-trend">
+                    <i class="fas fa-arrow-down text-danger"></i>
+                    <span class="text-danger">5%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stats-card card-students">
+            <div class="card-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="card-content">
+                <h3 class="text-success">{{ total_students }}</h3>
+                <p class="fw-semibold mb-0">Sinh Viên</p>
+                <div class="card-trend">
+                    <i class="fas fa-arrow-up text-success"></i>
+                    <span class="text-success">3%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stats-card card-revenue">
+            <div class="card-icon">
+                <i class="fas fa-money-bill-wave"></i>
+            </div>
+            <div class="card-content">
+                <h3 class="text-info">{{ "{:,.0f}".format(total_revenue) }}</h3>
+                <p class="fw-semibold mb-0">Doanh Thu (VND)</p>
+                <div class="card-trend">
+                    <i class="fas fa-arrow-up text-success"></i>
+                    <span class="text-success">18%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Recent Orders -->
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary-gradient d-flex justify-content-between align-items-center">
+                <h4 class="mb-0 text-white">
+                    <i class="fas fa-list-alt me-2"></i>Đơn Hàng Gần Đây
+                </h4>
+                <a href="{{ url_for('admin_orders') }}" class="btn btn-light btn-sm btn-hover">
+                    Xem Tất Cả <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+            <div class="card-body p-0">
+                {% if recent_orders %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Mã Đơn</th>
+                                <th>Sinh Viên</th>
+                                <th>Tổng Tiền</th>
+                                <th>Trạng Thái</th>
+                                <th>Thời Gian</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in recent_orders %}
+                            <tr class="order-row">
+                                <td>
+                                    <strong>#{{ order.id }}</strong>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0">
+                                            <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6 class="mb-0 fw-semibold">
+                                                {{ order.user.student_detail.ho_ten if order.user.student_detail else 'N/A' }}
+                                            </h6>
+                                            <small class="text-muted">{{ order.user.student_detail.ma_sv if order.user.student_detail else '' }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="fw-bold text-success">
+                                    {{ "{:,.0f}".format(order.total_amount) }}₫
+                                </td>
+                                <td>
+                                    {% if order.status == 'pending' %}
+                                    <span class="badge status-badge bg-warning">
+                                        <i class="fas fa-clock me-1"></i>Đang Chờ
+                                    </span>
+                                    {% elif order.status == 'confirmed' %}
+                                    <span class="badge status-badge bg-info">
+                                        <i class="fas fa-utensils me-1"></i>Đang Làm
+                                    </span>
+                                    {% elif order.status == 'completed' %}
+                                    <span class="badge status-badge bg-success">
+                                        <i class="fas fa-check me-1"></i>Hoàn Thành
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <small class="text-muted">{{ order.created_at.strftime('%H:%M %d/%m') }}</small>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5 empty-state">
+                    <i class="fas fa-receipt fa-3x text-muted mb-3"></i>
+                    <p class="text-muted mb-0">Chưa có đơn hàng nào</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Content -->
+    <div class="col-lg-4">
+        <!-- Quick Actions -->
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary-gradient">
+                <h4 class="mb-0 text-white">
+                    <i class="fas fa-bolt me-2"></i>Thao Tác Nhanh
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-3">
+                    <a href="{{ url_for('admin_orders') }}" class="btn btn-primary btn-lg btn-hover">
+                        <i class="fas fa-list-alt me-2"></i>Quản Lý Đơn Hàng
+                    </a>
+                    <button class="btn btn-outline-primary btn-lg btn-hover">
+                        <i class="fas fa-utensils me-2"></i>Quản Lý Thực Đơn
+                    </button>
+                    <button class="btn btn-outline-primary btn-lg btn-hover">
+                        <i class="fas fa-users me-2"></i>Quản Lý Sinh Viên
+                    </button>
+                    <button class="btn btn-outline-primary btn-lg btn-hover">
+                        <i class="fas fa-chart-bar me-2"></i>Báo Cáo Thống Kê
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Status -->
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-header bg-primary-gradient">
+                <h4 class="mb-0 text-white">
+                    <i class="fas fa-server me-2"></i>Trạng Thái Hệ Thống
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="system-status-item">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center">
+                            <span class="status-indicator online me-2"></span>
+                            <span>Database</span>
+                        </div>
+                        <span class="badge bg-success">Online</span>
+                    </div>
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div class="system-status-item">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center">
+                            <span class="status-indicator online me-2"></span>
+                            <span>Server</span>
+                        </div>
+                        <span class="badge bg-success">Stable</span>
+                    </div>
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 92%" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div class="system-status-item">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center">
+                            <span class="status-indicator online me-2"></span>
+                            <span>Performance</span>
+                        </div>
+                        <span class="badge bg-success">Optimal</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 78%" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+:root {
+    --primary: #4361ee;
+    --secondary: #3f37c9;
+    --success: #4cc9f0;
+    --info: #4895ef;
+    --warning: #f72585;
+    --danger: #e63946;
+    --light: #f8f9fa;
+    --dark: #212529;
+    --gradient: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    --gradient-light: linear-gradient(135deg, #4895ef 0%, #4361ee 100%);
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-icon {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-dot.online {
+    background-color: #28a745;
+    box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.3);
+}
+
+.stats-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 100%;
+    border-left: 4px solid;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-orders {
+    border-left-color: var(--primary);
+}
+
+.card-pending {
+    border-left-color: var(--warning);
+}
+
+.card-students {
+    border-left-color: var(--success);
+}
+
+.card-revenue {
+    border-left-color: var(--info);
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.card-orders .card-icon {
+    background: var(--gradient);
+}
+
+.card-pending .card-icon {
+    background: linear-gradient(135deg, #f72585 0%, #b5179e 100%);
+}
+
+.card-students .card-icon {
+    background: linear-gradient(135deg, #4cc9f0 0%, #4895ef 100%);
+}
+
+.card-revenue .card-icon {
+    background: linear-gradient(135deg, #560bad 0%, #3a0ca3 100%);
+}
+
+.card-content h3 {
+    margin-bottom: 0.25rem;
+    font-size: 1.75rem;
+}
+
+.card-trend {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.bg-primary-gradient {
+    background: var(--gradient) !important;
+}
+
+.btn-hover {
+    transition: all 0.3s ease;
+}
+
+.btn-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+}
+
+.order-row {
+    transition: all 0.2s ease;
+}
+
+.order-row:hover {
+    background-color: rgba(67, 97, 238, 0.05);
+}
+
+.status-badge {
+    padding: 0.5rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.system-status-item {
+    margin-bottom: 1.5rem;
+}
+
+.system-status-item:last-child {
+    margin-bottom: 0;
+}
+
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-indicator.online {
+    background-color: #28a745;
+}
+
+.empty-state {
+    padding: 3rem 1rem;
+}
+
+.progress {
+    height: 6px;
+    border-radius: 3px;
+}
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .stats-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+    }
+    
+    
+    .card-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+}
+</style>
+{% endblock %}

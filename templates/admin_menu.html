@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+        <h1 class="display-5 fw-bold text-dark mb-2">
+            <i class="fas fa-utensils me-3" style="background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+            Quản Lý Thực Đơn
+        </h1>
+        <p class="text-muted lead">Thêm, sửa, xóa và quản lý món ăn trong menu</p>
+    </div>
+    <button class="btn btn-accent btn-lg" data-bs-toggle="modal" data-bs-target="#addMenuItemModal">
+        <i class="fas fa-plus me-2"></i>Thêm Món Mới
+    </button>
+</div>
+
+<!-- Thống kê nhanh -->
+<div class="row g-4 mb-5">
+    <div class="col-md-3">
+        <div class="stats-card">
+            <i class="fas fa-utensils"></i>
+            <h3 class="text-primary">{{ menu_items|length }}</h3>
+            <p class="fw-semibold mb-0">Tổng Món Ăn</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card">
+            <i class="fas fa-check-circle"></i>
+            <h3 class="text-success">{{ menu_items|selectattr('is_available')|list|length }}</h3>
+            <p class="fw-semibold mb-0">Đang Phục Vụ</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card">
+            <i class="fas fa-pause-circle"></i>
+            <h3 class="text-warning">{{ menu_items|rejectattr('is_available')|list|length }}</h3>
+            <p class="fw-semibold mb-0">Tạm Ngừng</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card accent">
+            <i class="fas fa-tags"></i>
+            <h3>{{ menu_items|map(attribute='loai')|unique|list|length }}</h3>
+            <p class="fw-semibold mb-0">Loại Món Ăn</p>
+        </div>
+    </div>
+</div>
+
+<!-- Bảng danh sách món ăn -->
+<div class="card">
+    <div class="card-header">
+        <h4 class="mb-0 text-white">
+            <i class="fas fa-list me-2"></i>Danh Sách Món Ăn
+        </h4>
+    </div>
+    <div class="card-body p-0">
+        {% if menu_items %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Tên Món</th>
+                        <th>Loại</th>
+                        <th class="text-center">Giá</th>
+                        <th class="text-center">Trạng Thái</th>
+                        <th class="text-center">Số Đơn Đã Bán</th>
+                        <th class="text-center">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in menu_items %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-primary text-white rounded-2 d-flex align-items-center justify-content-center" 
+                                         style="width: 40px; height: 40px;">
+                                        <i class="fas fa-utensils"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0 fw-semibold">{{ item.ten_mon }}</h6>
+                                    <small class="text-muted">ID: {{ item.id }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="category-badge">{{ item.loai }}</span>
+                        </td>
+                        <td class="text-center fw-bold text-success">
+                            {{ "{:,.0f}".format(item.gia) }}₫
+                        </td>
+                        <td class="text-center">
+                            {% if item.is_available %}
+                            <span class="badge bg-success">
+                                <i class="fas fa-check me-1"></i>Đang bán
+                            </span>
+                            {% else %}
+                            <span class="badge bg-secondary">
+                                <i class="fas fa-pause me-1"></i>Tạm ngừng
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <span class="fw-semibold">
+                                {{ item.order_details|length if item.order_details }}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary toggle-status-btn" 
+                                        data-item-id="{{ item.id }}"
+                                        data-current-status="{{ item.is_available }}">
+                                    {% if item.is_available %}
+                                    <i class="fas fa-pause"></i>
+                                    {% else %}
+                                    <i class="fas fa-play"></i>
+                                    {% endif %}
+                                </button>
+                                <button class="btn btn-outline-warning edit-item-btn"
+                                        data-item-id="{{ item.id }}"
+                                        data-item-name="{{ item.ten_mon }}"
+                                        data-item-price="{{ item.gia }}"
+                                        data-item-type="{{ item.loai }}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-outline-danger delete-item-btn"
+                                        data-item-id="{{ item.id }}"
+                                        data-item-name="{{ item.ten_mon }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-utensils fa-4x text-muted mb-3"></i>
+            <h4 class="text-muted mb-3">Chưa có món ăn nào</h4>
+            <p class="text-muted mb-4">Hãy thêm món ăn đầu tiên vào menu!</p>
+            <button class="btn btn-accent btn-lg" data-bs-toggle="modal" data-bs-target="#addMenuItemModal">
+                <i class="fas fa-plus me-2"></i>Thêm Món Ăn Đầu Tiên
+            </button>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal Thêm Món Mới -->
+<div class="modal fade" id="addMenuItemModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus me-2"></i>Thêm Món Ăn Mới
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('add_menu_item') }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Tên món ăn</label>
+                        <input type="text" name="ten_mon" class="form-control" placeholder="Nhập tên món ăn" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Giá (VND)</label>
+                        <input type="number" name="gia" class="form-control" placeholder="Nhập giá" min="1000" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Loại món ăn</label>
+                        <select name="loai" class="form-select" required>
+                            <option value="">Chọn loại món ăn</option>
+                            <option value="Món chính">Món chính</option>
+                            <option value="Đồ ăn nhanh">Đồ ăn nhanh</option>
+                            <option value="Đồ ăn sáng">Đồ ăn sáng</option>
+                            <option value="Đồ uống">Đồ uống</option>
+                            <option value="Tráng miệng">Tráng miệng</option>
+                            <option value="Khác">Khác</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-accent">Thêm Món Ăn</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Chỉnh Sửa Món Ăn -->
+<div class="modal fade" id="editMenuItemModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-edit me-2"></i>Chỉnh Sửa Món Ăn
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="editMenuItemForm">
+                <div class="modal-body">
+                    <input type="hidden" id="edit_item_id" name="item_id">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Tên món ăn</label>
+                        <input type="text" id="edit_item_name" name="ten_mon" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Giá (VND)</label>
+                        <input type="number" id="edit_item_price" name="gia" class="form-control" min="1000" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Loại món ăn</label>
+                        <select id="edit_item_type" name="loai" class="form-select" required>
+                            <option value="Món chính">Món chính</option>
+                            <option value="Đồ ăn nhanh">Đồ ăn nhanh</option>
+                            <option value="Đồ ăn sáng">Đồ ăn sáng</option>
+                            <option value="Đồ uống">Đồ uống</option>
+                            <option value="Tráng miệng">Tráng miệng</option>
+                            <option value="Khác">Khác</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-accent">Cập Nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    // Toggle trạng thái món ăn
+    $('.toggle-status-btn').click(function() {
+        const itemId = $(this).data('item-id');
+        const currentStatus = $(this).data('current-status');
+        
+        $.ajax({
+            url: '{{ url_for("toggle_menu_item", item_id=0) }}'.replace('0', itemId),
+            method: 'GET',
+            success: function(response) {
+                location.reload();
+            }
+        });
+    });
+    
+    // Mở modal chỉnh sửa
+    $('.edit-item-btn').click(function() {
+        const itemId = $(this).data('item-id');
+        const itemName = $(this).data('item-name');
+        const itemPrice = $(this).data('item-price');
+        const itemType = $(this).data('item-type');
+        
+        $('#edit_item_id').val(itemId);
+        $('#edit_item_name').val(itemName);
+        $('#edit_item_price').val(itemPrice);
+        $('#edit_item_type').val(itemType);
+        
+        $('#editMenuItemModal').modal('show');
+    });
+    
+    // Xử lý chỉnh sửa món ăn
+    $('#editMenuItemForm').submit(function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        
+        $.ajax({
+            url: '{{ url_for("edit_menu_item") }}',
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.success) {
+                    $('#editMenuItemModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert(response.message);
+                }
+            }
+        });
+    });
+    
+    // Xóa món ăn
+    $('.delete-item-btn').click(function() {
+        const itemId = $(this).data('item-id');
+        const itemName = $(this).data('item-name');
+        
+        if (confirm(`Bạn có chắc muốn xóa món "${itemName}"?`)) {
+            $.ajax({
+                url: '{{ url_for("delete_menu_item", item_id=0) }}'.replace('0', itemId),
+                method: 'POST',
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            });
+        }
+    });
+});
+</script>
+{% endblock %}
