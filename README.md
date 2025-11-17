@@ -21,7 +21,8 @@
 </div>
 
 </div>
-1. 📖 Giới thiệu hệ thống
+
+## 1. 📖 Giới thiệu hệ thống
 
 Smart Canteen là hệ thống web hỗ trợ đặt món & quản lý nhà ăn dành cho môi trường đại học.
 Dự án giải quyết loạt vấn đề hay gặp ở căng tin truyền thống: xếp hàng dài, sai sót đơn hàng, khó quản lý và thiếu minh bạch.
@@ -64,7 +65,7 @@ Quản trị viên (Admin):
 
 📊 Dashboard thống kê real-time
 
-2. 🛠️ Công nghệ sử dụng
+## 2. 🛠️ Công nghệ sử dụng
 
 🐍 Python 3.8+
 
@@ -76,7 +77,7 @@ Quản trị viên (Admin):
 
 🌐 HTML/CSS/JavaScript ES6+
 
-3. 🖼️ Hình ảnh giao diện
+## 3. 🖼️ Hình ảnh giao diện
 🔑 Login / Register
 
 🍽️ Trang Menu & Giỏ hàng
@@ -102,7 +103,7 @@ SQLite Database
 </pre>
 
 ---
-5. ⚙️ Tính năng & Luồng hoạt động
+## 5. ⚙️ Tính năng & Luồng hoạt động
 Luồng đặt món của sinh viên
 <pre>
 Đăng nhập
@@ -128,7 +129,7 @@ User Auth
 Admin Management
 </pre>
 ---
-6. 🔧 Cài đặt & Chạy dự án
+## 6. 🔧 Cài đặt & Chạy dự án
 <pre>
 Bước 1 — Clone repo
 git clone https://github.com/username/smart-canteen.git
@@ -156,14 +157,14 @@ Tài khoản demo
 🛠️ Admin: admin / admin123
 </pre>
 ---
-7. 📊 Kết quả thực nghiệm
+## 7. 📊 Kết quả thực nghiệm
 Tiêu chí	Hệ thống cũ	Smart Canteen	Cải thiện
 Thời gian đặt món	3–5 phút	30–60 giây	+80%
 Sai sót đơn hàng	15%	2%	-87%
 Đơn xử lý/giờ	20–30	60–80	+150%
 Hài lòng người dùng	60%	92%	+53%
 ---
-8. 🚀 Hướng phát triển tương lai
+## 8. 🚀 Hướng phát triển tương lai
 
 Thanh toán số (Momo, VNPay, ZaloPay)
 
@@ -174,11 +175,15 @@ AI gợi ý món ăn theo lịch sử
 Websocket realtime order tracking
 
 Dashboard phân tích nâng cao
+
 ---
-9. 👤 Liên hệ
+
+## 9. 👤 Liên hệ
+<pre>
 Sinh viên thực hiện: Trịnh Hữu Hiệu
 Khoa Công nghệ Thông tin – Đại học Đại Nam
 
 Email: trinhhuuhieu19122003@gmail.com
 Website: https://dainam.edu.vn/vi/khoa-cong-nghe-thong-tin
 Fanpage: AIoTLab - FIT DNU
+</pre>
