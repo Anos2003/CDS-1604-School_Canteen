@@ -82,7 +82,8 @@ Quản trị viên (Admin):
 🍽️ Trang Menu & Giỏ hàng
 
 🛠️ Admin Dashboard
-
+---
+<pre>
 4. 🧩 Kiến trúc & Mô hình hệ thống
 Client (Browser)
      │
@@ -98,9 +99,12 @@ SQLAlchemy ORM (Model)
      ▼
 SQLite Database
 
+</pre>
+
+---
 5. ⚙️ Tính năng & Luồng hoạt động
 Luồng đặt món của sinh viên
-
+<pre>
 Đăng nhập
 
 Duyệt menu
@@ -122,8 +126,10 @@ Order Processing
 User Auth
 
 Admin Management
-
+</pre>
+---
 6. 🔧 Cài đặt & Chạy dự án
+<pre>
 Bước 1 — Clone repo
 git clone https://github.com/username/smart-canteen.git
 cd smart-canteen
@@ -148,13 +154,15 @@ Tài khoản demo
 👨‍🎓 Student: student1 / password123
 
 🛠️ Admin: admin / admin123
-
+</pre>
+---
 7. 📊 Kết quả thực nghiệm
 Tiêu chí	Hệ thống cũ	Smart Canteen	Cải thiện
 Thời gian đặt món	3–5 phút	30–60 giây	+80%
 Sai sót đơn hàng	15%	2%	-87%
 Đơn xử lý/giờ	20–30	60–80	+150%
 Hài lòng người dùng	60%	92%	+53%
+---
 8. 🚀 Hướng phát triển tương lai
 
 Thanh toán số (Momo, VNPay, ZaloPay)
@@ -166,7 +174,7 @@ AI gợi ý món ăn theo lịch sử
 Websocket realtime order tracking
 
 Dashboard phân tích nâng cao
-
+---
 9. 👤 Liên hệ
 Sinh viên thực hiện: Trịnh Hữu Hiệu
 Khoa Công nghệ Thông tin – Đại học Đại Nam
