@@ -79,9 +79,9 @@ Quản trị viên (Admin):
 
 ## 3. 🖼️ Hình ảnh giao diện
 🔑 Login / Register
-
+  ![Login/Register](./docs/login_smart_canteen.png)
 🍽️ Trang Menu & Giỏ hàng
-
+  ![Menu](./docs/menu_sc.png)
 🛠️ Admin Dashboard
 ---
 <pre>
@@ -183,9 +183,8 @@ Dashboard phân tích nâng cao
 ## 9. 👤 Liên hệ
 <pre>
 Sinh viên thực hiện: Trịnh Hữu Hiệu
-Khoa Công nghệ Thông tin – Đại học Đại Nam
-
-Email: trinhhuuhieu19122003@gmail.com
-Website: https://dainam.edu.vn/vi/khoa-cong-nghe-thong-tin
-Fanpage: AIoTLab - FIT DNU
+Khoa công nghệ thông tin – Đại học Đại Nam
+🌐 Website: https://dainam.edu.vn/vi/khoa-cong-nghe-thong-tin
+📧 Email: [trinhhuuhieu19122003@gmail.com]
+📱 Fanpage: AIoTLab - FIT DNU
 </pre>
