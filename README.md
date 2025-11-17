@@ -158,11 +158,13 @@ Tài khoản demo
 </pre>
 ---
 ## 7. 📊 Kết quả thực nghiệm
+<pre>
 Tiêu chí	Hệ thống cũ	Smart Canteen	Cải thiện
 Thời gian đặt món	3–5 phút	30–60 giây	+80%
 Sai sót đơn hàng	15%	2%	-87%
 Đơn xử lý/giờ	20–30	60–80	+150%
 Hài lòng người dùng	60%	92%	+53%
+</pre>
 ---
 ## 8. 🚀 Hướng phát triển tương lai
 
